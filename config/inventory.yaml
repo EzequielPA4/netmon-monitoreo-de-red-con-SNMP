@@ -1,0 +1,65 @@
+# inventory.yaml - inventario del laboratorio (TP SNMP)
+# ifIndex verificados por SNMP el 2026-10-23.
+# La community NO va aca: se lee de /etc/netmon/netmon.env (NETMON_COMMUNITY).
+
+polling:
+  interval_s: 10                  # interfaces (trafico y estado)
+  resources_interval_s: 30        # CPU y memoria
+
+traps:
+  port: 162                       # UDP; requiere CAP_NET_BIND_SERVICE (ver netmon.service)
+
+thresholds:                       # utilizacion respecto de la capacidad de referencia
+  warning_pct: 50                 # amarillo desde 50 %
+  critical_pct: 80                # rojo desde 80 % (o enlace caido)
+  default_capacity_bps: 3000000   # 3 Mbit/s: limite medido del plano de datos con iPerf3
+
+devices:
+  - id: rt-borde
+    name: RT-BORDE
+    vendor: mikrotik
+    ip: 192.168.50.1
+    snmp: {timeout_s: 3, retries: 1}
+    pos: {x: 250, y: 0}
+  - id: fortigate
+    name: FortiGate-Bridge
+    vendor: fortinet
+    ip: 192.168.50.2
+    snmp: {timeout_s: 3, retries: 1}
+    pos: {x: 500, y: 0}
+  - id: sw-core
+    name: SW-CORE
+    vendor: aruba
+    ip: 192.168.50.11
+    snmp: {timeout_s: 5, retries: 2}
+    mem_total_mb: 4096              # asignada en GNS3 (la MIB de Aruba no informa el total)
+    pos: {x: 760, y: 0}
+  - id: sw-ii
+    name: SW-II
+    vendor: aruba
+    ip: 192.168.50.12
+    snmp: {timeout_s: 5, retries: 2}
+    mem_total_mb: 4096              # asignada en GNS3 (la MIB de Aruba no informa el total)
+    pos: {x: 1030, y: -170}
+  - id: sw-iii
+    name: SW-III
+    vendor: aruba
+    ip: 192.168.50.13
+    snmp: {timeout_s: 5, retries: 2}
+    mem_total_mb: 4096              # asignada en GNS3 (la MIB de Aruba no informa el total)
+    pos: {x: 1030, y: 170}
+  - {id: srv-i,    name: SRV-I,    vendor: linux, ip: 192.168.50.200, snmp: null, pos: {x: 1300, y: -170}}
+  - {id: srv-ii,   name: SRV-II,   vendor: linux, ip: 192.168.50.199, snmp: null, pos: {x: 1300, y: 170}}
+  - {id: srv-mon,  name: SRV-MON,  vendor: linux, ip: 192.168.50.20,  snmp: null, pos: {x: 760, y: 200}}
+  - {id: internet, name: Internet, vendor: cloud, ip: null,           snmp: null, pos: {x: 0, y: 0}}
+
+links:   # a / b = extremos; ifindex null = extremo sin SNMP
+  - {id: wan,       a: {device: rt-borde,  ifindex: 2}, b: {device: internet, ifindex: null}}
+  - {id: rt-fg,     a: {device: rt-borde,  ifindex: 6}, b: {device: fortigate, ifindex: 1}}
+  - {id: fg-core,   a: {device: fortigate, ifindex: 3}, b: {device: sw-core,  ifindex: 1}}
+  - {id: core-ii,   a: {device: sw-core,   ifindex: 2}, b: {device: sw-ii,    ifindex: 2}}
+  - {id: core-iii,  a: {device: sw-core,   ifindex: 3}, b: {device: sw-iii,   ifindex: 2}}
+  - {id: ii-iii,    a: {device: sw-ii,     ifindex: 3}, b: {device: sw-iii,   ifindex: 3}}
+  - {id: ii-srvi,   a: {device: sw-ii,     ifindex: 1}, b: {device: srv-i,    ifindex: null}}
+  - {id: iii-srvii, a: {device: sw-iii,    ifindex: 1}, b: {device: srv-ii,   ifindex: null}}
+  - {id: core-mon,  a: {device: sw-core,   ifindex: 4}, b: {device: srv-mon,  ifindex: null}}

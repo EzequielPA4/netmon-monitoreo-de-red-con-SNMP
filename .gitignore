@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+venv/
+.venv/
+# credenciales locales: nunca subir la community real
+*.env
+!deploy/netmon.env.example

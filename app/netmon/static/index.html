@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>netmon · Lab SNMP</title>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">▲</span>
+      <span class="brand-name">netmon</span>
+      <span class="brand-sub">Laboratorio SNMP · GNS3</span>
+    </div>
+    <div class="status-strip">
+      <span class="pill" id="conn"><span class="dot"></span><span id="conn-text">Conectando…</span></span>
+      <span class="meta" id="updated">Sin datos</span>
+      <span class="meta" id="interval"></span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <div class="left-col">
+    <section class="map-wrap">
+      <div id="map"></div>
+      <div class="map-tools">
+        <button id="fit-btn" title="Ajustar el mapa a la ventana">⤢ Ajustar</button>
+        <button id="legend-btn" title="Mostrar u ocultar la leyenda">Leyenda</button>
+      </div>
+      <div class="legend collapsed">
+        <div class="legend-title">Enlaces</div>
+        <div class="legend-row"><span class="sw ok"></span>Normal</div>
+        <div class="legend-row"><span class="sw warning"></span><span id="lg-warn">Elevada</span></div>
+        <div class="legend-row"><span class="sw critical"></span><span id="lg-crit">Alta</span></div>
+        <div class="legend-row"><span class="sw down"></span>Caído (oper down)</div>
+        <div class="legend-row"><span class="sw admin"></span>Apagado (admin down)</div>
+        <div class="legend-row"><span class="sw unknown"></span>Sin datos</div>
+        <div class="legend-title">Equipos</div>
+        <div class="legend-row"><span class="nd up"></span>Responde SNMP</div>
+        <div class="legend-row"><span class="nd stale"></span>Dato atrasado</div>
+        <div class="legend-row"><span class="nd unreachable"></span>Sin respuesta</div>
+        <div class="legend-row"><span class="nd nosnmp"></span>Sin SNMP</div>
+        <div class="legend-row"><span class="trap-mark">T</span>Estado informado por trap</div>
+      </div>
+    </section>
+
+    <section class="timeline">
+      <div class="tl-head">
+        <h2>Eventos (traps)</h2>
+        <div class="tl-actions">
+          <span class="meta" id="trap-stats">Receptor de traps: –</span>
+          <button id="tl-clear" title="Borra la línea de tiempo y reinicia los contadores">Limpiar</button>
+        </div>
+      </div>
+      <div class="tl-scroll">
+        <table class="tl">
+          <thead><tr><th>Hora</th><th>Equipo</th><th>Evento</th><th>Interfaz</th><th>Estado</th><th>Enlace</th><th>Confirmación</th><th></th></tr></thead>
+          <tbody id="tl-body"><tr class="tl-empty"><td colspan="8">Sin eventos recibidos.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+    </div>
+
+    <aside class="panel" id="panel">
+      <div class="panel-empty" id="panel-empty">
+        <h2>Resumen</h2>
+        <div id="summary"></div>
+        <p class="hint">Seleccioná un equipo o un enlace en el mapa para ver el detalle.</p>
+      </div>
+      <div id="panel-body" hidden></div>
+    </aside>
+  </main>
+
+  <script src="/static/vendor/cytoscape-3.30.2.min.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>
