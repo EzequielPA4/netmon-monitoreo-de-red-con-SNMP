@@ -85,7 +85,7 @@ flowchart LR
 | **Motor de estado** | Combina inventario, consultas y traps y decide el estado de cada equipo y enlace. |
 | **Servidor web** | Sirve el dashboard y envía cada cambio al navegador en cuanto ocurre. |
 
-**Cálculo del tráfico.** SNMP no informa velocidades: informa **contadores de bytes acumulados**. netmon lee el contador dos veces y divide la diferencia por el tiempo transcurrido. Para medir ese tiempo usa el `sysUpTime` del propio equipo, y contempla el desborde del contador. Usa los contadores de 64 bits (`ifHCInOctets`) cuando el equipo los actualiza, y si no, los de 32 bits (`ifInOctets`).
+**Cálculo del tráfico.** SNMP no informa velocidades: informa **contadores de bytes acumulados**. netmon lee el contador dos veces y divide la diferencia por el tiempo transcurrido. Para medir ese tiempo usa el `sysUpTime` del propio equipo, y contempla el desborde del contador. 
 
 ---
 
@@ -101,7 +101,7 @@ flowchart LR
 | SRV-MON | Ubuntu 24.04 | Servidor de monitoreo (netmon) | 192.168.50.20 |
 | SRV-I / SRV-II | Ubuntu 24.04 | Generación de tráfico (iPerf3) | 192.168.50.200 / .199 |
 
-> No se usaron equipos Cisco porque no se consiguió una imagen compatible para GNS3. netmon no depende del fabricante: para sumar otro, alcanza con agregarlo al inventario. Si se quieren CPU y memoria, también hay que sumar su perfil en `app/netmon/resources.py`.
+Para sumar otros fabricantes, alcanza con agregarlo al inventario. Si se quieren CPU y memoria, también hay que sumar su perfil en `app/netmon/resources.py`.
 
 ---
 
